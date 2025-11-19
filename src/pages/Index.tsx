@@ -5,6 +5,25 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import { useInView } from 'react-intersection-observer';
+
+const AnimatedSection = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ${
+        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Index = () => {
   const { toast } = useToast();
@@ -110,12 +129,12 @@ const Index = () => {
 
       <section id="продукция" className="py-20 px-6 bg-muted/30">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
+          <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Наша продукция</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Широкий ассортимент изделий из никелида титана для различных областей медицины
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -149,17 +168,15 @@ const Index = () => {
                 description: 'Разработка индивидуальных решений под ваши задачи'
               }
             ].map((product, index) => (
-              <Card
-                key={index}
-                className="p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-primary/20 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
+              <AnimatedSection key={index}>
+                <Card className="p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-primary/20">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center mb-6">
                   <Icon name={product.icon} size={32} className="text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">{product.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{product.description}</p>
-              </Card>
+                  <h3 className="text-2xl font-bold mb-3">{product.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+                </Card>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -168,14 +185,14 @@ const Index = () => {
       <section id="технологии" className="py-20 px-6">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in">
+            <AnimatedSection>
               <img
                 src="https://cdn.poehali.dev/projects/834e3ad5-9fd4-4445-91e1-3ef52af15474/files/0cad19ae-be60-4d17-9720-15cbc99e6ac4.jpg"
                 alt="Производство"
                 className="rounded-3xl shadow-2xl"
               />
-            </div>
-            <div className="space-y-6 animate-fade-in-up">
+            </AnimatedSection>
+            <AnimatedSection className="space-y-6">
               <h2 className="text-4xl md:text-5xl font-bold">Передовые технологии производства</h2>
               <p className="text-xl text-muted-foreground">
                 Используем современное оборудование и инновационные методы обработки сплавов
@@ -214,19 +231,19 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
 
       <section id="преимущества" className="py-20 px-6 bg-gradient-to-br from-primary/5 to-blue-600/5">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
+          <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Почему выбирают нас</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Преимущества работы с МИЦ «МЕДСПЛАВ»
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid md:grid-cols-4 gap-8">
             {[
               {
@@ -250,17 +267,13 @@ const Index = () => {
                 description: 'Техническая помощь на всех этапах'
               }
             ].map((advantage, index) => (
-              <div
-                key={index}
-                className="text-center space-y-4 animate-scale-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
+              <AnimatedSection key={index} className="text-center space-y-4">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
                   <Icon name={advantage.icon} size={40} className="text-white" />
                 </div>
                 <h3 className="text-2xl font-bold">{advantage.title}</h3>
                 <p className="text-muted-foreground">{advantage.description}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -268,7 +281,7 @@ const Index = () => {
 
       <section id="о компании" className="py-20 px-6">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center space-y-6 animate-fade-in">
+          <AnimatedSection className="text-center space-y-6">
             <h2 className="text-4xl md:text-5xl font-bold">О компании</h2>
             <div className="prose prose-lg mx-auto text-muted-foreground">
               <p className="text-xl leading-relaxed">
@@ -287,18 +300,18 @@ const Index = () => {
                 className="rounded-3xl shadow-2xl w-full"
               />
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       <section id="сертификаты" className="py-20 px-6 bg-muted/30">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
+          <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Сертификаты и лицензии</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Наша продукция соответствует всем международным стандартам качества
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { icon: 'FileCheck', title: 'ISO 9001', description: 'Система менеджмента качества' },
@@ -306,13 +319,15 @@ const Index = () => {
               { icon: 'BadgeCheck', title: 'CE Mark', description: 'Европейский сертификат' },
               { icon: 'Award', title: 'FDA', description: 'Регистрация в США' }
             ].map((cert, index) => (
-              <Card key={index} className="p-8 text-center hover:shadow-xl transition-all hover:-translate-y-1 animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              <AnimatedSection key={index}>
+                <Card className="p-8 text-center hover:shadow-xl transition-all hover:-translate-y-1">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon name={cert.icon} size={32} className="text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
-                <p className="text-muted-foreground text-sm">{cert.description}</p>
-              </Card>
+                  <h3 className="text-xl font-bold mb-2">{cert.title}</h3>
+                  <p className="text-muted-foreground text-sm">{cert.description}</p>
+                </Card>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -320,21 +335,19 @@ const Index = () => {
 
       <section id="партнеры" className="py-20 px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
+          <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Наши партнеры</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Мы сотрудничаем с ведущими медицинскими учреждениями и научными центрами России и мира
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((partner) => (
-              <div
-                key={partner}
-                className="bg-white rounded-2xl p-8 flex items-center justify-center h-32 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 animate-scale-in"
-                style={{ animationDelay: `${partner * 0.05}s` }}
-              >
-                <div className="text-4xl font-bold text-muted-foreground/20">Партнер {partner}</div>
-              </div>
+              <AnimatedSection key={partner}>
+                <div className="bg-white rounded-2xl p-8 flex items-center justify-center h-32 shadow-md hover:shadow-xl transition-all hover:-translate-y-1">
+                  <div className="text-4xl font-bold text-muted-foreground/20">Партнер {partner}</div>
+                </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -342,14 +355,14 @@ const Index = () => {
 
       <section id="контакты" className="py-20 px-6 bg-gradient-to-br from-primary/5 to-blue-600/5">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16 animate-fade-in">
+          <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Свяжитесь с нами</h2>
             <p className="text-xl text-muted-foreground">
               Готовы ответить на все ваши вопросы и обсудить сотрудничество
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-6 animate-fade-in">
+            <AnimatedSection className="space-y-6">
               <Card className="p-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -383,8 +396,9 @@ const Index = () => {
                   </div>
                 </div>
               </Card>
-            </div>
-            <Card className="p-8 animate-fade-in-up">
+            </AnimatedSection>
+            <AnimatedSection>
+              <Card className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Имя</label>
@@ -429,7 +443,8 @@ const Index = () => {
                   <Icon name="Send" size={20} className="ml-2" />
                 </Button>
               </form>
-            </Card>
+              </Card>
+            </AnimatedSection>
           </div>
         </div>
       </section>
