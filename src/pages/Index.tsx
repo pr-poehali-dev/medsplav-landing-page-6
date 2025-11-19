@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -35,12 +35,21 @@ const AnimatedSection = ({ children, className = '' }: { children: React.ReactNo
 const Index = () => {
   const { toast } = useToast();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: ''
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,10 +140,13 @@ const Index = () => {
         </nav>
       </header>
 
-      <section id="главная" className="pt-32 pb-20 px-6">
+      <section id="главная" className="pt-32 pb-20 px-6 overflow-hidden">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 animate-fade-in">
+            <div 
+              className="space-y-6 animate-fade-in"
+              style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+            >
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
                 Инновационные решения из{' '}
                 <span className="text-gradient">никелида титана</span>
@@ -166,8 +178,14 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div className="relative animate-scale-in">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-600/20 rounded-3xl blur-3xl"></div>
+            <div 
+              className="relative animate-scale-in"
+              style={{ transform: `translateY(${scrollY * -0.15}px)` }}
+            >
+              <div 
+                className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-600/20 rounded-3xl blur-3xl"
+                style={{ transform: `scale(${1 + scrollY * 0.0005})` }}
+              ></div>
               <img
                 src="https://cdn.poehali.dev/projects/834e3ad5-9fd4-4445-91e1-3ef52af15474/files/1688c8b0-e42f-4ad6-a3aa-ac52c3bc375c.jpg"
                 alt="Никелид титана"
