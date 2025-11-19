@@ -6,6 +6,13 @@ import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import { useInView } from 'react-intersection-observer';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 const AnimatedSection = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => {
   const { ref, inView } = useInView({
@@ -27,6 +34,7 @@ const AnimatedSection = ({ children, className = '' }: { children: React.ReactNo
 
 const Index = () => {
   const { toast } = useToast();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -46,7 +54,10 @@ const Index = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
   };
+
+  const menuItems = ['Главная', 'Продукция', 'Технологии', 'Преимущества', 'О компании', 'Сертификаты', 'Партнеры', 'Контакты'];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-muted/30">
@@ -63,7 +74,7 @@ const Index = () => {
               </div>
             </div>
             <div className="hidden md:flex items-center space-x-6">
-              {['Главная', 'Продукция', 'Технологии', 'Преимущества', 'О компании', 'Сертификаты', 'Партнеры', 'Контакты'].map((item) => (
+              {menuItems.map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
@@ -73,9 +84,49 @@ const Index = () => {
                 </button>
               ))}
             </div>
-            <Button className="md:hidden" size="icon" variant="ghost">
-              <Icon name="Menu" size={24} />
-            </Button>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button className="md:hidden" size="icon" variant="ghost">
+                  <Icon name="Menu" size={24} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetHeader>
+                  <SheetTitle className="text-left">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-xl">М</span>
+                      </div>
+                      <div>
+                        <div className="font-bold text-lg leading-tight">МИЦ «МЕДСПЛАВ»</div>
+                        <p className="text-xs text-muted-foreground font-normal">Инновации в NiTi</p>
+                      </div>
+                    </div>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col space-y-4 mt-8">
+                  {menuItems.map((item) => (
+                    <button
+                      key={item}
+                      onClick={() => scrollToSection(item.toLowerCase())}
+                      className="text-left text-lg font-medium hover:text-primary transition-colors py-3 px-4 rounded-lg hover:bg-muted"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+                <div className="absolute bottom-8 left-6 right-6">
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={() => scrollToSection('контакты')}
+                  >
+                    Связаться с нами
+                    <Icon name="ArrowRight" size={20} className="ml-2" />
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </nav>
       </header>
